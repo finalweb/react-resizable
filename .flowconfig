@@ -1,8 +1,12 @@
+[version]
+0.55.0
+
 [ignore]
 .*/node_modules/babel.*
 .*/node_modules/fbjs/.*
 .*/node_modules/express/.*
 .*/node_modules/serve-index/.*
+<PROJECT_ROOT>/build/.*
 
 [include]
 

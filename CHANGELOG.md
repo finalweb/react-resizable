@@ -1,5 +1,24 @@
 # Changelog
 
+### 1.7.5 (Sep 26, 2017)
+
+- Support for React 16 (no changes required, updated `peerDependencies`)
+- Minor dep updates.
+
+### 1.7.4 (Sep 5, 2017)
+
+- Minor Flow & dependency updates.
+
+### 1.7.3 (Aug 31, 2017)
+
+- Fix React deprecation warnings from `import *`
+  - https://github.com/facebook/react/issues/10583
+
+### 1.7.2 (Aug 21, 2017)
+
+- Pkg: Add `react-draggable@3.0.0` to version range.
+  - This package is compatible with both `@2` and `@3` versions.
+
 ### 1.7.1 (May 23, 2017)
 
 - Bugfix: Some flow types were improperly specified.
