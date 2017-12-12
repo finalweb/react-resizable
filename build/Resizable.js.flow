@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {DraggableCore} from 'react-draggable';
 import cloneElement from './cloneElement';
+import type {Element as ReactElement, Node as ReactNode} from 'react';
 
 type Axis = 'both' | 'x' | 'y' | 'none';
 type State = {
@@ -21,7 +22,8 @@ export type ResizeCallbackData = {
   size: {width: number, height: number}
 };
 export type Props = {
-  children: React.Element<any>,
+  children: ReactElement<any>,
+  className?: ?string,
   width: number,
   height: number,
   handleSize: [number, number],
@@ -29,14 +31,13 @@ export type Props = {
   axis: Axis,
   minConstraints: [number, number],
   maxConstraints: [number, number],
-  onResizeStop?: ?(e: SyntheticEvent, data: ResizeCallbackData) => any,
-  onResizeStart?: ?(e: SyntheticEvent, data: ResizeCallbackData) => any,
-  onResize?: ?(e: SyntheticEvent, data: ResizeCallbackData) => any,
+  onResizeStop?: ?(e: SyntheticEvent<>, data: ResizeCallbackData) => any,
+  onResizeStart?: ?(e: SyntheticEvent<>, data: ResizeCallbackData) => any,
+  onResize?: ?(e: SyntheticEvent<>, data: ResizeCallbackData) => any,
   draggableOpts?: ?Object
 };
 
-export default class Resizable extends React.Component {
-
+export default class Resizable extends React.Component<Props, State> {
   static propTypes = {
     //
     // Required Props
@@ -78,7 +79,6 @@ export default class Resizable extends React.Component {
     // These will be passed wholesale to react-draggable's DraggableCore
     draggableOpts: PropTypes.object
   };
-  props: Props;
 
   static defaultProps =  {
     handleSize: [20, 20],
@@ -165,7 +165,7 @@ export default class Resizable extends React.Component {
    * @return {Function}           Handler function.
    */
   resizeHandler(handlerName: string): Function {
-    return (e: SyntheticEvent | MouseEvent, {node, deltaX, deltaY}: DragCallbackData) => {
+    return (e: SyntheticEvent<> | MouseEvent, {node, deltaX, deltaY}: DragCallbackData) => {
 
       // Axis restrictions
       const canDragX = this.props.axis === 'both' || this.props.axis === 'x';
@@ -207,7 +207,7 @@ export default class Resizable extends React.Component {
     };
   }
 
-  render(): React.Element<any> {
+  render(): ReactNode {
     // eslint-disable-next-line no-unused-vars
     const {children, draggableOpts, width, height, handleSize,
         lockAspectRatio, axis, minConstraints, maxConstraints, onResize,

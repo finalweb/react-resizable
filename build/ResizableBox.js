@@ -86,25 +86,22 @@ var ResizableBox = function (_React$Component) {
         height = _props.height,
         props = _objectWithoutProperties(_props, ['handleSize', 'onResize', 'onResizeStart', 'onResizeStop', 'draggableOpts', 'minConstraints', 'maxConstraints', 'lockAspectRatio', 'axis', 'width', 'height']);
 
-    return (
-      // $FlowIgnore children & defaultProps bug (https://github.com/facebook/flow/issues/1964)
-      _react2.default.createElement(
-        _Resizable2.default,
-        {
-          handleSize: handleSize,
-          width: this.state.width,
-          height: this.state.height,
-          onResizeStart: onResizeStart,
-          onResize: this.onResize,
-          onResizeStop: onResizeStop,
-          draggableOpts: draggableOpts,
-          minConstraints: minConstraints,
-          maxConstraints: maxConstraints,
-          lockAspectRatio: lockAspectRatio,
-          axis: axis
-        },
-        _react2.default.createElement('div', _extends({ style: { width: this.state.width + 'px', height: this.state.height + 'px' } }, props))
-      )
+    return _react2.default.createElement(
+      _Resizable2.default,
+      {
+        handleSize: handleSize,
+        width: this.state.width,
+        height: this.state.height,
+        onResizeStart: onResizeStart,
+        onResize: this.onResize,
+        onResizeStop: onResizeStop,
+        draggableOpts: draggableOpts,
+        minConstraints: minConstraints,
+        maxConstraints: maxConstraints,
+        lockAspectRatio: lockAspectRatio,
+        axis: axis
+      },
+      _react2.default.createElement('div', _extends({ style: { width: this.state.width + 'px', height: this.state.height + 'px' } }, props))
     );
   };
 

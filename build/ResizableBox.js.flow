@@ -3,16 +3,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Resizable from './Resizable';
 import type {Props as ResizableProps, ResizeCallbackData} from './Resizable';
+import type {Node as ReactNode} from 'react';
 
 type State = {width: number, height: number};
 
 // An example use of Resizable.
-export default class ResizableBox extends React.Component {
+export default class ResizableBox extends React.Component<ResizableProps, State> {
   static propTypes = {
     height: PropTypes.number,
     width: PropTypes.number
   };
-  props: ResizableProps;
 
   static defaultProps = {
     handleSize: [20,20]
@@ -23,7 +23,7 @@ export default class ResizableBox extends React.Component {
     height: this.props.height,
   };
 
-  onResize = (e: SyntheticEvent, data: ResizeCallbackData) => {
+  onResize = (e: SyntheticEvent<>, data: ResizeCallbackData) => {
     const {size} = data;
     const {width, height} = size;
 
@@ -44,14 +44,13 @@ export default class ResizableBox extends React.Component {
     }
   }
 
-  render(): React.Element<any> {
+  render(): ReactNode {
     // Basic wrapper around a Resizable instance.
     // If you use Resizable directly, you are responsible for updating the child component
     // with a new width and height.
     const {handleSize, onResize, onResizeStart, onResizeStop, draggableOpts,
          minConstraints, maxConstraints, lockAspectRatio, axis, width, height, ...props} = this.props;
     return (
-      // $FlowIgnore children & defaultProps bug (https://github.com/facebook/flow/issues/1964)
       <Resizable
         handleSize={handleSize}
         width={this.state.width}
