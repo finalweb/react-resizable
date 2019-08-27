@@ -1,8 +1,12 @@
+[version]
+^0.98.0
+
 [ignore]
 .*/node_modules/babel.*
 .*/node_modules/fbjs/.*
 .*/node_modules/express/.*
 .*/node_modules/serve-index/.*
+<PROJECT_ROOT>/build/.*
 
 [include]
 
@@ -24,4 +28,3 @@ module.system.node.resolve_dirname=node_modules
 module.system.node.resolve_dirname=.
 module.use_strict=true
 server.max_workers=6
-unsafe.enable_getters_and_setters=true
