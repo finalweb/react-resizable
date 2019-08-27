@@ -128,7 +128,7 @@ var Resizable = function (_React$Component) {
    */
 
 
-  Resizable.prototype.resizeHandler = function resizeHandler(handlerName) {
+  Resizable.prototype.resizeHandler = function resizeHandler(handlerName, axis) {
     var _this2 = this;
 
     return function (e, _ref2) {
@@ -138,8 +138,16 @@ var Resizable = function (_React$Component) {
 
 
       // Axis restrictions
-      var canDragX = _this2.props.axis === 'both' || _this2.props.axis === 'x';
-      var canDragY = _this2.props.axis === 'both' || _this2.props.axis === 'y';
+      var canDragX = (_this2.props.axis === 'both' || _this2.props.axis === 'x') && ['n', 's'].indexOf(axis) === -1;
+      var canDragY = (_this2.props.axis === 'both' || _this2.props.axis === 'y') && ['e', 'w'].indexOf(axis) === -1;
+
+      // reverse delta if using top or left drag handles
+      if (canDragX && axis[axis.length - 1] === 'w') {
+        deltaX = -deltaX;
+      }
+      if (canDragY && axis[0] === 'n') {
+        deltaY = -deltaY;
+      }
 
       var scale = _this2.getBodyScale();
 
@@ -172,9 +180,10 @@ var Resizable = function (_React$Component) {
 
       var hasCb = typeof _this2.props[handlerName] === 'function';
       if (hasCb) {
+        // $FlowIgnore isn't refining this correctly to SyntheticEvent
         if (typeof e.persist === 'function') e.persist();
         _this2.setState(newState, function () {
-          return _this2.props[handlerName](e, { node: node, size: { width: width, height: height } });
+          return _this2.props[handlerName](e, { node: node, size: { width: width, height: height }, handle: axis });
         });
       } else {
         _this2.setState(newState);
@@ -182,7 +191,21 @@ var Resizable = function (_React$Component) {
     };
   };
 
+  Resizable.prototype.renderResizeHandle = function renderResizeHandle(resizeHandle) {
+    var handle = this.props.handle;
+
+    if (handle) {
+      if (typeof handle === 'function') {
+        return handle(resizeHandle);
+      }
+      return handle;
+    }
+    return _react2.default.createElement('span', { className: 'react-resizable-handle react-resizable-handle-' + resizeHandle });
+  };
+
   Resizable.prototype.render = function render() {
+    var _this3 = this;
+
     // eslint-disable-next-line no-unused-vars
     var _props = this.props,
         children = _props.children,
@@ -197,26 +220,29 @@ var Resizable = function (_React$Component) {
         onResize = _props.onResize,
         onResizeStop = _props.onResizeStop,
         onResizeStart = _props.onResizeStart,
-        p = _objectWithoutProperties(_props, ['children', 'draggableOpts', 'width', 'height', 'handleSize', 'lockAspectRatio', 'axis', 'minConstraints', 'maxConstraints', 'onResize', 'onResizeStop', 'onResizeStart']);
+        resizeHandles = _props.resizeHandles,
+        p = _objectWithoutProperties(_props, ['children', 'draggableOpts', 'width', 'height', 'handleSize', 'lockAspectRatio', 'axis', 'minConstraints', 'maxConstraints', 'onResize', 'onResizeStop', 'onResizeStart', 'resizeHandles']);
 
     var className = p.className ? p.className + ' react-resizable' : 'react-resizable';
 
     // What we're doing here is getting the child of this element, and cloning it with this element's props.
     // We are then defining its children as:
     // Its original children (resizable's child's children), and
-    // A draggable handle.
+    // One or more draggable handles.
     return (0, _cloneElement2.default)(children, _extends({}, p, {
       className: className,
-      children: [children.props.children, _react2.default.createElement(
-        _reactDraggable.DraggableCore,
-        _extends({}, draggableOpts, {
-          key: 'resizableHandle',
-          onStop: this.resizeHandler('onResizeStop'),
-          onStart: this.resizeHandler('onResizeStart'),
-          onDrag: this.resizeHandler('onResize')
-        }),
-        _react2.default.createElement('span', { className: 'react-resizable-handle' })
-      )]
+      children: [children.props.children, resizeHandles.map(function (h) {
+        return _react2.default.createElement(
+          _reactDraggable.DraggableCore,
+          _extends({}, draggableOpts, {
+            key: 'resizableHandle-' + h,
+            onStop: _this3.resizeHandler('onResizeStop', h),
+            onStart: _this3.resizeHandler('onResizeStart', h),
+            onDrag: _this3.resizeHandler('onResize', h)
+          }),
+          _this3.renderResizeHandle(h)
+        );
+      })]
     }));
   };
 
@@ -239,8 +265,23 @@ Resizable.propTypes = {
   // Optional props
   //
 
+  // Custom resize handle
+  handle: _propTypes2.default.element,
+
   // If you change this, be sure to update your css
   handleSize: _propTypes2.default.array,
+
+  // Defines which resize handles should be rendered (default: 'se')
+  // Allows for any combination of:
+  // 's' - South handle (bottom-center)
+  // 'w' - West handle (left-center)
+  // 'e' - East handle (right-center)
+  // 'n' - North handle (top-center)
+  // 'sw' - Southwest handle (bottom-left)
+  // 'nw' - Northwest handle (top-left)
+  // 'se' - Southeast handle (bottom-right)
+  // 'ne' - Northeast handle (top-center)
+  resizeHandles: _propTypes2.default.arrayOf(_propTypes2.default.oneOf(['s', 'w', 'e', 'n', 'sw', 'nw', 'se', 'ne'])),
 
   // If true, will only allow width/height to move in lockstep
   lockAspectRatio: _propTypes2.default.bool,
@@ -269,6 +310,7 @@ Resizable.defaultProps = {
   lockAspectRatio: false,
   axis: 'both',
   minConstraints: [20, 20],
-  maxConstraints: [Infinity, Infinity]
+  maxConstraints: [Infinity, Infinity],
+  resizeHandles: ['se']
 };
 exports.default = Resizable;

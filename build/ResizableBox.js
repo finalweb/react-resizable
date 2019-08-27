@@ -73,6 +73,7 @@ var ResizableBox = function (_React$Component) {
     // If you use Resizable directly, you are responsible for updating the child component
     // with a new width and height.
     var _props = this.props,
+        handle = _props.handle,
         handleSize = _props.handleSize,
         onResize = _props.onResize,
         onResizeStart = _props.onResizeStart,
@@ -84,11 +85,13 @@ var ResizableBox = function (_React$Component) {
         axis = _props.axis,
         width = _props.width,
         height = _props.height,
-        props = _objectWithoutProperties(_props, ['handleSize', 'onResize', 'onResizeStart', 'onResizeStop', 'draggableOpts', 'minConstraints', 'maxConstraints', 'lockAspectRatio', 'axis', 'width', 'height']);
+        resizeHandles = _props.resizeHandles,
+        props = _objectWithoutProperties(_props, ['handle', 'handleSize', 'onResize', 'onResizeStart', 'onResizeStop', 'draggableOpts', 'minConstraints', 'maxConstraints', 'lockAspectRatio', 'axis', 'width', 'height', 'resizeHandles']);
 
     return _react2.default.createElement(
       _Resizable2.default,
       {
+        handle: handle,
         handleSize: handleSize,
         width: this.state.width,
         height: this.state.height,
@@ -99,7 +102,8 @@ var ResizableBox = function (_React$Component) {
         minConstraints: minConstraints,
         maxConstraints: maxConstraints,
         lockAspectRatio: lockAspectRatio,
-        axis: axis
+        axis: axis,
+        resizeHandles: resizeHandles
       },
       _react2.default.createElement('div', _extends({ style: { width: this.state.width + 'px', height: this.state.height + 'px' } }, props))
     );
